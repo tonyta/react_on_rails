@@ -29,6 +29,7 @@ Changes since the last non-beta release.
 
 #### Fixed
 
+- **Fixed ScoutApm instrumentation depending on Gemfile ordering**. ScoutApm instrumentation for `react_component`, `react_component_hash`, and `exec_server_render_js` was previously installed at gem load time using `defined?(ScoutApm)` guards, which meant it was silently skipped if `scout_apm` appeared after `react_on_rails` in the Gemfile, and produced noisy INFO log messages if it appeared before (since ScoutApm wasn't yet initialized). Moved instrumentation into an initializer that runs after `scout_apm.start`, ensuring it works regardless of gem ordering and only after ScoutApm is fully configured. [PR 2442](https://github.com/shakacode/react_on_rails/pull/2442) by [tonyta](https://github.com/tonyta).
 - **Fixed string values interpolated into generated JS code without proper escaping**. All string values (component names, DOM IDs, Redux store names) embedded in server-rendering JavaScript now use `.to_json` instead of unescaped single-quoted interpolation, preventing potential JS breakage from special characters. [PR 2440](https://github.com/shakacode/react_on_rails/pull/2440) by [AbanoubGhadban](https://github.com/AbanoubGhadban).
 
 #### Pro
